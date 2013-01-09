@@ -61,4 +61,109 @@ describe Character do
     subject.take_damage(1)
     subject.dead?.should be_false
   end
+
+  context "when overriding constructor defaults" do
+    subject do
+      options = { :name => "Dennis",
+                  :alignment => :evil }
+      Character.new(options)
+    end
+
+    it "is Dennis" do
+      subject.name.should == "Dennis"
+    end
+
+    it "is evil" do
+      subject.alignment.should == :evil
+    end
+  end
+
+  describe "abilities" do
+    it "starts with a str of 10" do
+      subject.strength.should == 10
+    end
+    it "starts with a dex of 10" do
+      subject.dexterity.should == 10
+    end
+    it "starts with a con of 10" do
+      subject.constitution.should == 10
+    end
+    it "starts with a wis of 10" do
+      subject.wisdom.should == 10
+    end
+    it "starts with a int of 10" do
+      subject.intelligence.should == 10
+    end
+    it "starts with a chr of 10" do
+      subject.charisma.should == 10
+    end
+
+    it "is legal to set an ability to 1" do
+      subject.strength = 1
+      subject.strength.should == 1
+    end
+
+    it "is legal to set an ability to 20" do
+      subject.dexterity = 20
+      subject.dexterity.should == 20
+    end
+
+    it "abilities are capped start at 1" do
+      subject.constitution = 0
+      subject.constitution.should == 1
+    end
+
+    it "abilities are capped ending at 20" do
+      subject.constitution = 21
+      subject.constitution.should == 20
+    end
+
+    it "ability of 10 modifies to 0" do
+      subject.modifier(10).should == 0
+    end
+
+    it "ability of 11 modifies to 0" do
+      subject.modifier(11).should == 0
+    end
+
+    it "ability of 1 modifies to -5" do
+      subject.modifier(1).should == -5
+    end
+
+    it "ability of 20 modifies to 5" do
+      subject.modifier(20).should == 5
+    end
+
+    it "ability of 9 modifies to -1" do
+      subject.modifier(9).should == -1
+    end
+
+  end
+
+  describe "ability modifiers" do
+    it "constitution of 10 gives max HP of 5" do
+      subject.max_hp.should == 5
+    end
+
+    it "constitution of 20 gives max HP of 10" do
+      subject.constitution = 20
+      subject.max_hp.should == 10
+    end
+
+    it "constitution of 1 gives max HP of 1" do
+      subject.constitution = 1
+      subject.max_hp.should == 1
+    end
+
+    it "dexterity of 10 gives AC of 10" do
+      subject.armor_class.should == 10
+    end
+
+    it "dexterity of 1 gives AC of 5" do
+      subject.dexterity = 1
+      subject.armor_class.should == 5
+    end
+
+  end
+
 end
